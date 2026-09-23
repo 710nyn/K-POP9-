@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff7fa">
+<title>K-POP 好き顔ランキング</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff4f8;color:#40363a;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}
+button{font:inherit}
+.app{width:100%;max-width:560px;min-height:100vh;margin:auto;background:#fff;overflow:hidden}
+.page{display:none;min-height:100vh;padding:32px 20px 42px}
+.page.active{display:block}
+.brand{text-align:center;color:#d9819e;font-size:12px;font-weight:800;letter-spacing:.25em;margin:10px 0 46px}
+.kicker{text-align:center;color:#dc87a2;font-size:11px;font-weight:800;letter-spacing:.18em;margin:0 0 12px}
+.hero-star{text-align:center;color:#eaa0b8;font-size:28px;margin-bottom:10px}
+h1,h2{margin:0;text-align:center;line-height:1.38;font-weight:900}
+h1{font-size:34px;letter-spacing:-.04em}
+h1 em,h2 em{font-style:normal;color:#de809e}
+h2{font-size:26px}
+.desc{text-align:center;color:#907b84;line-height:1.9;font-size:14px;margin:18px 0 0}
+.main{display:block;border:0;margin:30px auto 0;padding:15px 34px;border-radius:999px;background:linear-gradient(135deg,#efa9c0,#dc7f9f);color:#fff;font-weight:800;font-size:15px;box-shadow:0 9px 22px rgba(220,127,159,.24)}
+.small-note{text-align:center;color:#b19fa5;font-size:10px;margin-top:14px}
+.back{border:0;width:38px;height:38px;border-radius:50%;background:#fff0f4;color:#cf7894;font-size:28px;line-height:1;margin-bottom:25px}
+.group-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:25px}
+.group{border:1px solid #efdce3;background:#fff;border-radius:16px;padding:13px 12px;text-align:left;color:#56494e}
+.group.selected{background:#fff0f4;border-color:#e58aa5;box-shadow:0 5px 15px rgba(225,135,162,.12)}
+.group b{display:block;font-size:13px}.group small{display:block;color:#a39197;font-size:10px;margin-top:3px}
+.sticky{position:sticky;bottom:15px}
+.progress{height:5px;background:#f8e7ed;border-radius:9px;overflow:hidden;margin:0 0 24px}.progress i{display:block;height:100%;width:0;background:#e48aa6}
+.counter{text-align:center;color:#a38d95;font-size:11px;margin-bottom:10px}
+.question{font-size:25px;margin-bottom:22px}
+.battle{display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);align-items:center;gap:7px}
+.card{border:1px solid #eddde3;background:#fff;border-radius:19px;overflow:hidden;padding:0;box-shadow:0 8px 23px rgba(150,90,115,.12)}
+.avatar{aspect-ratio:1/1.12;display:flex;align-items:center;justify-content:center;color:#bd8197;font-size:10px;background:linear-gradient(145deg,#f7dce6,#fff7fa);position:relative}
+.avatar:after{content:"♡";position:absolute;right:8px;top:7px;width:26px;height:26px;border-radius:50%;background:#fff;display:grid;place-items:center;color:#df8aa5;font-size:14px}
+.info{padding:11px 7px 13px;text-align:left}.info b{display:block;font-size:13px}.info small{display:block;color:#a08c94;font-size:10px;margin-top:3px}
+.vs{text-align:center;color:#df86a2;font-weight:900;font-size:11px}
+.tip{text-align:center;color:#a38f96;font-size:11px;margin-top:18px}
+.result-box{border:2px solid #eee2e5;border-radius:25px;padding:25px 15px 19px;margin-top:16px}
+.result-title{text-align:center;font-size:25px;font-weight:900}.result-title span{color:#eaa0b8}.result-sub{text-align:center;color:#a08b92;font-size:11px;margin:7px 0 18px}
+.results{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.result-card{position:relative;border:1px solid #dedadd;border-radius:14px;overflow:hidden;background:#fff}
+.result-card.first{border:3px solid #eda62c;box-shadow:0 4px 15px rgba(237,166,44,.2)}
+.result-photo{aspect-ratio:1/1.14;background:linear-gradient(145deg,#f6dfe7,#fff);display:flex;align-items:center;justify-content:center;color:#bd8a9d;font-size:9px}
+.badge{position:absolute;left:7px;top:7px;background:rgba(55,48,51,.67);color:#fff;border-radius:999px;padding:4px 7px;font-size:10px;font-weight:700}
+.go{position:absolute;right:6px;top:6px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#e6a02b;font-size:16px}
+.rinfo{padding:8px 8px 10px}.rinfo b{display:block;font-size:11px}.rinfo small{display:block;color:#a28d94;font-size:9px;margin-top:2px}
+.again{margin-top:22px}
+@media(min-width:561px){body{padding:20px 0}.app{border-radius:28px;box-shadow:0 12px 45px rgba(160,90,115,.12)}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<section id="home" class="page active">
+  <div class="brand">K-POP BOYS</div>
+  <div class="hero-star">✦</div>
+  <p class="kicker">YOUR FAVORITE FACE</p>
+  <h1>あなたの<br><em>好き顔ランキング</em></h1>
+  <p class="desc">好きなメンバーを直感で選んで、<br>あなたの好き顔ランキングを作ろう♡</p>
+  <button class="main" onclick="show('groups')">START　♡</button>
+  <p class="small-note">9人を選んでランキングを作るよ</p>
+</section>
+
+<section id="groups" class="page">
+  <button class="back" onclick="show('home')">‹</button>
+  <p class="kicker">STEP 1</p>
+  <h2>グループを選んでね</h2>
+  <p class="desc">複数選択OK。ここから9人を選ぶよ♡</p>
+  <div id="groupGrid" class="group-grid"></div>
+  <button class="main sticky" onclick="begin()">このメンバーでSTART　♡</button>
+</section>
+
+<section id="battlePage" class="page">
+  <button class="back" onclick="show('groups')">‹</button>
+  <div class="counter" id="counter">1 / 18</div>
+  <div class="progress"><i id="progress"></i></div>
+  <p class="kicker">WHO DO YOU LIKE?</p>
+  <h2 class="question">どっちの顔が好き？</h2>
+  <div class="battle">
+    <button class="card" id="a"></button>
+    <div class="vs">VS</div>
+    <button class="card" id="b"></button>
+  </div>
+  <p class="tip">迷ったら直感でタップ ♡</p>
+</section>
+
+<section id="resultPage" class="page">
+  <div class="result-box">
+    <p class="kicker">診断結果</p>
+    <div class="result-title">あなたの好き顔選 <span>✦</span></div>
+    <p class="result-sub">あなたが選んだ9人のランキング</p>
+    <div id="results" class="results"></div>
+  </div>
+  <button class="main again" onclick="show('groups')">もう一度あそぶ　♡</button>
+</section>
+
+</div>
+
+<script>
+const GROUPS={
+"ATEEZ":["SAN","YUNHO","HONGJOONG","SEONGHWA","YEOSANG","MINGI","WOOYOUNG","JONGHO"],
+"Stray Kids":["BANG CHAN","LEE KNOW","CHANGBIN","HYUNJIN","HAN","FELIX","SEUNGMIN","I.N"],
+"TXT":["SOOBIN","YEONJUN","BEOMGYU","TAEHYUN","HUENINGKAI"],
+"ENHYPEN":["JUNGWON","HEESEUNG","JAY","JAKE","SUNGHOON","SUNOO","NI-KI"],
+"ZEROBASEONE":["ZHANG HAO","SUNG HAN BIN","SEOK MATTHEW","KIM TAE RAE","KIM GYU VIN","KIM JI WOONG","RICKY","PARK GUN WOOK","HAN YU JIN"],
+"RIIZE":["SHOTARO","EUNSEOK","SUNGCHAN","WONBIN","SOHEE","ANTON"],
+"BOYNEXTDOOR":["JAEHYUN","SUNGHO","RIWOO","TAESAN","LEEHAN","WOONHAK"],
+"TWS":["SHINYU","DOHOON","YOUNGJAE","HANJIN","JIHOON","KYUNGMIN"],
+"P1Harmony":["KEEHO","THEO","JIUNG","INTAK","SOUL","JONGSEOB"],
+"82MAJOR":["YECHAN","YEONHOON","SEONGMO","DOYUN","YEONGUNG"],
+"EVNNE":["KEITA","PARK HANBIN","LEE JEONGHYEON","YOO SEUNGEON","JI YUNSEO","MUN JUNSEO","PARK JIHOO"],
+"xikers":["MINJAE","JUNMIN","SUMIN","JINSIK","HYUNWOO","JUNGHOON","SEEUN","YUJUN","HUNTER","YECHAN"],
+"THE BOYZ":["SANGYEON","JACOB","YOUNGHOON","HYUNJAE","JUYEON","KEVIN","NEW","Q","JU HAKNYEON","ERIC"],
+"&TEAM":["K","FUMA","NICHOLAS","EJ","YUMA","JO","HARUA","TAKI","MAKI"],
+"NCT WISH":["SION","RIKU","YUSHI","JAEHEE","RYO","SAKUYA"]
+};
+
+let selected=[],people=[],scores={},rounds=[],n=0,total=18;
+const $=s=>document.querySelector(s);
+function show(id){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));$( "#"+id).classList.add("active");window.scrollTo(0,0)}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function renderGroups(){
+  $("#groupGrid").innerHTML=Object.entries(GROUPS).map(([g,m])=>`<button class="group" data-g="${g}"><b>${g}</b><small>${m.length} members</small></button>`).join("");
+  document.querySelectorAll(".group").forEach(x=>x.onclick=()=>{x.classList.toggle("selected");selected=[...document.querySelectorAll(".group.selected")].map(y=>y.dataset.g)})
+}
+renderGroups();
+
+function begin(){
+  let all=selected.flatMap(g=>GROUPS[g].map(name=>({name,group:g})));
+  if(all.length<9){alert("9人以上になるようにグループを選んでね♡");return}
+  people=shuffle(all).slice(0,9);
+  scores=Object.fromEntries(people.map(p=>[p.name,0]));
+  rounds=[];n=0;
+  while(rounds.length<total){
+    const a=people[Math.floor(Math.random()*9)],b=people[Math.floor(Math.random()*9)];
+    if(a.name!==b.name) rounds.push([a,b]);
+  }
+  show("battlePage");draw();
+}
+function card(el,p){
+  el.innerHTML=`<div class="avatar">PHOTO<br>画像を追加♡</div><div class="info"><b>${p.name}</b><small>${p.group}</small></div>`;
+}
+function draw(){
+  const [a,b]=rounds[n];card($("#a"),a);card($("#b"),b);
+  $("#counter").textContent=(n+1)+" / "+total;
+  $("#progress").style.width=(n/total*100)+"%";
+  $("#a").onclick=()=>pick(a);$("#b").onclick=()=>pick(b);
+}
+function pick(p){
+  scores[p.name]++;n++;
+  if(n>=total){result();return}
+  draw();
+}
+function result(){
+  const r=people.map(p=>({...p,score:scores[p.name]})).sort((x,y)=>y.score-x.score);
+  $("#results").innerHTML=r.map((p,i)=>`<div class="result-card ${i===0?"first":""}">
+    <div class="badge">No.${i+1}</div><button class="go">↗</button>
+    <div class="result-photo">PHOTO</div>
+    <div class="rinfo"><b>${p.name}</b><small>${p.group}</small></div>
+  </div>`).join("");
+  show("resultPage");
+}
+</script>
+</body>
+</html>
