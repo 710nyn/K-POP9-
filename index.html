@@ -279,22 +279,29 @@ function begin(){
   }
 
   people=[...selected];
-  scores=Object.fromEntries(people.map(p=>[p.group+"_"+p.name,0]));
+  scores=Object.fromEntries(
+    people.map(p=>[p.group+"_"+p.name,0])
+  );
+
   rounds=[];
   n=0;
 
-  while(rounds.length<total){
-    const a=people[Math.floor(Math.random()*people.length)];
-    const b=people[Math.floor(Math.random()*people.length)];
-
-    if(a.group+"_"+a.name !== b.group+"_"+b.name){
-      rounds.push([a,b]);
+  // 選んだメンバー全員を1対1で総当たり♡
+  for(let i=0;i<people.length;i++){
+    for(let j=i+1;j<people.length;j++){
+      rounds.push([people[i],people[j]]);
     }
   }
+
+  // 対戦順だけランダムにする
+  rounds=shuffle(rounds);
+  total=rounds.length;
 
   show("battlePage");
   draw();
 }
+
+
   
 function fileStem(p){
   const g=p.group.replace(/[^A-Za-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
