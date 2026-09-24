@@ -127,13 +127,21 @@ h2{font-size:26px}
 
 <section id="groups" class="page">
   <button class="back" onclick="show('home')">‹</button>
-  <p class="kicker">STEP 1</p>
-  <h2>グループを選んでね</h2>
-  <p class="desc">複数選択OK。ここから9人を選ぶよ♡</p>
-  <div id="groupGrid" class="group-grid"></div>
-  <button class="main sticky" onclick="begin()">このメンバーでSTART　♡</button>
-</section>
 
+  <p class="kicker">STEP 1</p>
+  <h2>メンバーを選んでね</h2>
+  <p class="desc">好きなメンバーを9人以上選んでね♡</p>
+
+  <div class="selected-count">
+    <span id="selectedCount">0</span>人選択中 ♡
+  </div>
+
+  <div id="memberGrid"></div>
+
+  <button class="main sticky" onclick="begin()">
+    このメンバーでSTART　♡
+  </button>
+</section>
 <section id="battlePage" class="page">
   <button class="back" onclick="show('groups')">‹</button>
   <div class="counter" id="counter">1 / 18</div>
