@@ -68,7 +68,49 @@ h2{font-size:26px}
   object-fit: cover;
 
   display: block;}
-  </style>
+.member-section{
+  margin:28px 0;
+}
+
+.member-section h3{
+  margin:0 0 12px;
+  font-size:18px;
+  color:#51484b;
+}
+
+.member-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.member{
+  border:1px solid #efdce3;
+  background:#fff;
+  border-radius:18px;
+  padding:15px 8px;
+  font-size:13px;
+  font-weight:700;
+  color:#51484b;
+  cursor:pointer;
+}
+
+.member.selected{
+  background:#fff0f4;
+  border-color:#e58ca8;
+  color:#d96f91;
+}
+
+.selected-count{
+  margin:20px auto 10px;
+  width:max-content;
+  background:#fff0f4;
+  color:#d77f9b;
+  border-radius:999px;
+  padding:8px 16px;
+  font-size:13px;
+  font-weight:700;
+}  </style>
 </head>
 <body>
 <div class="app">
@@ -141,24 +183,59 @@ let selected=[],people=[],scores={},rounds=[],n=0,total=18;
 const $=s=>document.querySelector(s);
 function show(id){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));$( "#"+id).classList.add("active");window.scrollTo(0,0)}
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
-function renderGroups(){
-  $("#groupGrid").innerHTML=Object.entries(GROUPS).map(([g,m])=>`<button class="group" data-g="${g}"><b>${g}</b><small>${m.length} members</small></button>`).join("");
-  document.querySelectorAll(".group").forEach(x=>x.onclick=()=>{x.classList.toggle("selected");selected=[...document.querySelectorAll(".group.selected")].map(y=>y.dataset.g)})
+function renderMembers(){
+  $("#memberGrid").innerHTML=Object.entries(GROUPS).map(([group,members])=>`
+    <div class="member-section">
+      <h3>${group}</h3>
+      <div class="member-grid">
+        ${members.map(name=>`
+          <button class="member" data-group="${group}" data-name="${name}">
+            ${name}
+          </button>
+        `).join("")}
+      </div>
+    </div>
+  `).join("");
+
+  document.querySelectorAll(".member").forEach(btn=>{
+    btn.onclick=()=>{
+      btn.classList.toggle("selected");
+
+      selected=[...document.querySelectorAll(".member.selected")].map(x=>({
+        name:x.dataset.name,
+        group:x.dataset.group
+      }));
+
+      $("#selectedCount").textContent=selected.length;
+    };
+  });
 }
-renderGroups();
+renderMembers();
 
 function begin(){
-  let all=selected.flatMap(g=>GROUPS[g].map(name=>({name,group:g})));
-  if(all.length<9){alert("9人以上になるようにグループを選んでね♡");return}
-  people=shuffle(all).slice(0,9);
-  scores=Object.fromEntries(people.map(p=>[p.name,0]));
-  rounds=[];n=0;
-  while(rounds.length<total){
-    const a=people[Math.floor(Math.random()*9)],b=people[Math.floor(Math.random()*9)];
-    if(a.name!==b.name) rounds.push([a,b]);
+  if(selected.length<9){
+    alert("メンバーを9人以上選んでね♡");
+    return;
   }
-  show("battlePage");draw();
+
+  people=[...selected];
+  scores=Object.fromEntries(people.map(p=>[p.group+"_"+p.name,0]));
+  rounds=[];
+  n=0;
+
+  while(rounds.length<total){
+    const a=people[Math.floor(Math.random()*people.length)];
+    const b=people[Math.floor(Math.random()*people.length)];
+
+    if(a.group+"_"+a.name !== b.group+"_"+b.name){
+      rounds.push([a,b]);
+    }
+  }
+
+  show("battlePage");
+  draw();
 }
+  
 function fileStem(p){
   const g=p.group.replace(/[^A-Za-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
   const n=p.name.replace(/[^A-Za-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
@@ -191,17 +268,38 @@ function draw(){
   $("#a").onclick=()=>pick(a);$("#b").onclick=()=>pick(b);
 }
 function pick(p){
-  scores[p.name]++;n++;
-  if(n>=total){result();return}
+  scores[p.group+"_"+p.name]++;
+  n++;
+
+  if(n>=total){
+    result();
+    return;
+  }
+
   draw();
 }
+
 function result(){
-  const r=people.map(p=>({...p,score:scores[p.name]})).sort((x,y)=>y.score-x.score);
-  $("#results").innerHTML=r.map((p,i)=>`<div class="result-card ${i===0?"first":""}">
-    <div class="badge">No.${i+1}</div><button class="go">↗</button>
-    ${photoHTML(p,"result-photo")}
-    <div class="rinfo"><b>${p.name}</b><small>${p.group}</small></div>
-  </div>`).join("");
+  const r=people
+    .map(p=>({
+      ...p,
+      score:scores[p.group+"_"+p.name]
+    }))
+    .sort((x,y)=>y.score-x.score)
+    .slice(0,9);
+
+  $("#results").innerHTML=r.map((p,i)=>`
+    <div class="result-card ${i===0?"first":""}">
+      <div class="badge">No.${i+1}</div>
+      <button class="go">↗</button>
+      ${photoHTML(p,"result-photo")}
+      <div class="rinfo">
+        <b>${p.name}</b>
+        <small>${p.group}</small>
+      </div>
+    </div>
+  `).join("");
+
   show("resultPage");
 }
 </script>
