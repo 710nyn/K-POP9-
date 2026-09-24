@@ -194,6 +194,69 @@ h2{font-size:26px}
   font-size:11px;
   font-weight:800;
 }
+  .undo-btn{
+  display:block;
+  margin:18px auto 0;
+  padding:11px 20px;
+  border:1.5px solid #f1cbd7;
+  border-radius:999px;
+  background:#fff0f4;
+  color:#d77f9b;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.03em;
+  box-shadow:0 4px 12px rgba(215,127,155,.12);
+  cursor:pointer;
+  transition:.15s;
+}
+
+.undo-btn:active{
+  transform:scale(.96);
+  background:#fbe1e9;
+}
+  /* 順位バッジをかわいく♡ */
+.result-card .badge{
+  position:absolute;
+  top:8px;
+  left:8px;
+  z-index:10;
+
+  min-width:34px;
+  height:34px;
+  padding:0 9px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:#fff0f4;
+  color:#d77f9b;
+  border:1.5px solid #f1cbd7;
+  border-radius:999px;
+
+  font-size:11px;
+  font-weight:800;
+  box-shadow:0 3px 10px rgba(215,127,155,.18);
+}
+
+/* 1位だけ特別♡ */
+.result-card.first .badge{
+  background:linear-gradient(135deg,#ffd7e5,#fff1b8);
+  border-color:#f1b65b;
+  color:#c97862;
+  box-shadow:0 3px 12px rgba(241,182,91,.28);
+}
+  /* 選んだときハートがぽんっ♡ */
+.selected-count.pop{
+  animation:heartPop .35s ease;
+}
+
+@keyframes heartPop{
+  0%{transform:scale(1);}
+  45%{transform:scale(1.15);}
+  70%{transform:scale(.96);}
+  100%{transform:scale(1);}
+}
 </style>
 </head>
 <body>
@@ -238,12 +301,13 @@ h2{font-size:26px}
     <button class="card" id="b"></button>
   </div>
   <p class="tip">迷ったら直感でタップ ♡</p>
+  <button class="undo-btn" onclick="undoPick()">↶ ひとつ前に戻る ♡</button>
 </section>
 
 <section id="resultPage" class="page">
   <div class="result-box">
     <p class="kicker">診断結果</p>
-    <div class="result-title">あなたの好き顔選 <span>✦</span></div>
+    <div class="result-title">あなたの好き顔9選 <span>✦</span></div>
     <p class="result-sub">あなたが選んだ9人のランキング</p>
     <div id="results" class="results"></div>
   </div>
@@ -299,7 +363,11 @@ function renderMembers(){
         group:x.dataset.group
       }));
 
-      $("#selectedCount").textContent=selected.length;
+      const count=$("#selectedCount");
+count.textContent=selected.length+"人選択中 "+(selected.length>0?"♥":"♡");
+count.classList.remove("pop");
+void count.offsetWidth;
+count.classList.add("pop");
     };
   });
 }
@@ -367,8 +435,10 @@ function draw(){
   $("#progress").style.width=(n/total*100)+"%";
   $("#a").onclick=()=>pick(a);$("#b").onclick=()=>pick(b);
 }
-function pick(p){
-  scores[p.group+"_"+p.name]++;
+let pickHistory=[];
+  function pick(p){
+  pickHistory.push(p);
+    scores[p.group+"_"+p.name]++;
   n++;
 
   if(n>=total){
@@ -378,7 +448,14 @@ function pick(p){
 
   draw();
 }
+function undoPick(){
+  if(n<=0 || pickHistory.length===0) return;
 
+  const last=pickHistory.pop();
+  scores[last.group+"_"+last.name]--;
+  n--;
+  draw();
+}
 function result(){
   const r=people
     .map(p=>({
