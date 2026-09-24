@@ -33,7 +33,7 @@ h2{font-size:26px}
 .question{font-size:25px;margin-bottom:22px}
 .battle{display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);align-items:center;gap:7px}
 .card{border:1px solid #eddde3;background:#fff;border-radius:19px;overflow:hidden;padding:0;box-shadow:0 8px 23px rgba(150,90,115,.12)}
-.avatar{aspect-ratio:1/1.12;display:flex;align-items:center;justify-content:center;color:#bd8197;font-size:10px;background:linear-gradient(145deg,#f7dce6,#fff7fa);position:relative}
+.avatar{aspect-ratio:1/1.12;display:flex;align-items:center;justify-content:center;color:#bd8197;font-size:10px;background:linear-gradient(145deg,#f7dce6,#fff7fa);position:relative}\n.avatar img,.result-photo img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}.photo-placeholder{display:block;text-align:center;line-height:1.6}.avatar img + .photo-placeholder,.result-photo img + .photo-placeholder{display:none}
 .avatar:after{content:"♡";position:absolute;right:8px;top:7px;width:26px;height:26px;border-radius:50%;background:#fff;display:grid;place-items:center;color:#df8aa5;font-size:14px}
 .info{padding:11px 7px 13px;text-align:left}.info b{display:block;font-size:13px}.info small{display:block;color:#a08c94;font-size:10px;margin-top:3px}
 .vs{text-align:center;color:#df86a2;font-weight:900;font-size:11px}
@@ -43,7 +43,7 @@ h2{font-size:26px}
 .results{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
 .result-card{position:relative;border:1px solid #dedadd;border-radius:14px;overflow:hidden;background:#fff}
 .result-card.first{border:3px solid #eda62c;box-shadow:0 4px 15px rgba(237,166,44,.2)}
-.result-photo{aspect-ratio:1/1.14;background:linear-gradient(145deg,#f6dfe7,#fff);display:flex;align-items:center;justify-content:center;color:#bd8a9d;font-size:9px}
+.result-photo{aspect-ratio:1/1.14;background:linear-gradient(145deg,#f6dfe7,#fff);display:flex;align-items:center;justify-content:center;color:#bd8a9d;font-size:9px}\n.result-photo{position:relative}
 .badge{position:absolute;left:7px;top:7px;background:rgba(55,48,51,.67);color:#fff;border-radius:999px;padding:4px 7px;font-size:10px;font-weight:700}
 .go{position:absolute;right:6px;top:6px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#e6a02b;font-size:16px}
 .rinfo{padding:8px 8px 10px}.rinfo b{display:block;font-size:11px}.rinfo small{display:block;color:#a28d94;font-size:9px;margin-top:2px}
@@ -140,8 +140,30 @@ function begin(){
   }
   show("battlePage");draw();
 }
+function fileStem(p){
+  const g=p.group.replace(/[^A-Za-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
+  const n=p.name.replace(/[^A-Za-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
+  return `images/${g}_${n}`;
+}
+function photoHTML(p, cls="avatar"){
+  const stem=fileStem(p);
+  const fallbacks=["jpg","jpeg","png","webp"];
+  const safe=stem.replace(/"/g,"&quot;");
+  return `<div class="${cls}"><img src="${stem}.jpg" alt="${p.name}" data-stem="${safe}" data-try="0" onerror="tryNextImage(this)"><span class="photo-placeholder">PHOTO<br>画像を追加♡</span></div>`;
+}
+function tryNextImage(img){
+  const exts=["jpg","jpeg","png","webp"];
+  let i=Number(img.dataset.try||0)+1;
+  if(i<exts.length){
+    img.dataset.try=String(i);
+    img.src=img.dataset.stem+"."+exts[i];
+  }else{
+    img.style.display="none";
+    img.nextElementSibling.style.display="block";
+  }
+}
 function card(el,p){
-  el.innerHTML=`<div class="avatar">PHOTO<br>画像を追加♡</div><div class="info"><b>${p.name}</b><small>${p.group}</small></div>`;
+  el.innerHTML=`${photoHTML(p)}<div class="info"><b>${p.name}</b><small>${p.group}</small></div>`;
 }
 function draw(){
   const [a,b]=rounds[n];card($("#a"),a);card($("#b"),b);
@@ -158,7 +180,7 @@ function result(){
   const r=people.map(p=>({...p,score:scores[p.name]})).sort((x,y)=>y.score-x.score);
   $("#results").innerHTML=r.map((p,i)=>`<div class="result-card ${i===0?"first":""}">
     <div class="badge">No.${i+1}</div><button class="go">↗</button>
-    <div class="result-photo">PHOTO</div>
+    ${photoHTML(p,"result-photo")}
     <div class="rinfo"><b>${p.name}</b><small>${p.group}</small></div>
   </div>`).join("");
   show("resultPage");
