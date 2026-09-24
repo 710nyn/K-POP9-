@@ -76,9 +76,6 @@ h2{font-size:26px}
 .result-photo {
 
   overflow: hidden;
-  aspect-ratio: auto;
-
-  height: 103px;
 }
 
 .avatar img,
@@ -293,7 +290,37 @@ border:1px solid #efdce3;
   color:#e58ca8;
   font-weight:800;
 }
+#resultPage .result-card{
+  display:flex;
+  flex-direction:column;
+}
 
+#resultPage .result-photo{
+  flex:1;
+  min-height:0;
+}
+
+#resultPage .rinfo{
+  height:24px;
+  box-sizing:border-box;
+  padding:3px 2px 2px;
+  flex-shrink:0;
+}
+
+#resultPage .rinfo b{
+  display:block;
+  font-size:9px;
+  line-height:9px;
+  color:#c08c9d;
+}
+
+#resultPage .rinfo small{
+  display:block;
+  font-size:7px;
+  line-height:7px;
+  margin-top:2px;
+  color:#c08c9d;
+}
 </style>
 </head>
 <body>
@@ -355,7 +382,7 @@ border:1px solid #efdce3;
 
 <script>
 const GROUPS={
-"ATEEZ":["SAN","YUNHO","HONGJOONG","SEONGHWA","YEOSANG","MINGI","WOOYOUNG","JONGHO"],
+"ATEEZ":["HONGJOONG","SEONGHWA","YUNHO","YEOSANG","SAN","MINGI","WOOYOUNG","JONGHO"],
 "Stray Kids":["BANG CHAN","LEE KNOW","CHANGBIN","HYUNJIN","HAN","FELIX","SEUNGMIN","I.N"],
 "TXT":["SOOBIN","YEONJUN","BEOMGYU","TAEHYUN","HUENINGKAI"],
 "ENHYPEN":["JUNGWON","HEESEUNG","JAY","JAKE","SUNGHOON","SUNOO","NI-KI"],
