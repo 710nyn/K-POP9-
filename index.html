@@ -264,6 +264,12 @@ border:1px solid #efdce3;
   70%{transform:scale(.96);}
   100%{transform:scale(1);}
 }
+  #battleHeart.pop{
+  animation: heartPop .3s ease;
+  color:#e58ca8;
+  font-weight:800;
+}
+
 </style>
 </head>
 <body>
@@ -307,7 +313,7 @@ border:1px solid #efdce3;
     <div class="vs">VS</div>
     <button class="card" id="b"></button>
   </div>
-  <p class="tip">迷ったら直感でタップ ♡</p>
+  <p class="tip" id="battleHeart">迷ったら直感でタップ ♡</p>
   <button class="undo-btn" onclick="undoPick()">↶ ひとつ前に戻る ♡</button>
 </section>
 
@@ -444,7 +450,14 @@ function draw(){
 }
 let pickHistory=[];
   function pick(p){
-  pickHistory.push(p);
+  const heart=$("#battleHeart");
+heart.textContent="迷ったら直感でタップ ♥";
+heart.classList.remove("pop");
+void heart.offsetWidth;
+heart.classList.add("pop");
+setTimeout(()=>heart.textContent="迷ったら直感でタップ ♡",300);
+    
+    pickHistory.push(p);
     scores[p.group+"_"+p.name]++;
   n++;
 
