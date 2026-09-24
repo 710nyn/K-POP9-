@@ -161,6 +161,39 @@ h2{font-size:26px}
 .member-photo img + .photo-placeholder{
   display:none !important;
 }
+/* 結果：写真を正方形＋順位を写真の左上に表示 */
+.result-card{
+  position:relative;
+}
+
+.result-photo{
+  width:100%;
+  aspect-ratio:1 / 1;
+  height:auto;
+  overflow:hidden;
+  border-radius:12px;
+  background:#fff;
+}
+
+.result-photo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+
+.result-card .badge{
+  position:absolute;
+  top:8px;
+  left:8px;
+  z-index:10;
+  background:rgba(255,255,255,.9);
+  color:#d77f9b;
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
+}
 </style>
 </head>
 <body>
