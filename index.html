@@ -332,6 +332,51 @@ border:1px solid #efdce3;
   margin:0 !important;
   padding:0 !important;
 }
+/* 結果カード：写真を上まで表示し、下に名前を2行で収める */
+#resultPage .result-card {
+  display: grid;
+  grid-template-rows: auto 26px;
+}
+
+#resultPage .result-photo {
+  flex: none;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+#resultPage .result-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+#resultPage .rinfo {
+  height: 26px;
+  padding: 0 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#resultPage .rinfo b {
+  height: auto !important;
+  font-size: 9px !important;
+  line-height: 10px !important;
+}
+
+#resultPage .rinfo small {
+  font-size: 7px;
+  line-height: 8px;
+  margin-top: 1px;
+}  
 </style>
 </head>
 <body>
